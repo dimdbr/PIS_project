@@ -1,7 +1,10 @@
 package Factory;
 
 import DAO.UserDAO;
+import DAO.UserRoleDAO;
+import DAOImpl.MySQLRoleDAO;
 import DAOImpl.MySQLUserDAO;
+import DAOImpl.MySQLUserRoleDAO;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -27,8 +30,17 @@ public class MySQLDAOFactory extends DAOFactory{
     }
 
     @Override
-    public UserDAO getUserDao() throws SQLException, IOException {
+    public MySQLUserDAO getUserDao() throws SQLException, IOException {
         return new MySQLUserDAO(createConnection());
+    }
+    @Override
+    public MySQLRoleDAO getRoleDao() throws SQLException, IOException {
+        return new MySQLRoleDAO(createConnection());
+    }
+
+    @Override
+    public UserRoleDAO getUserRoleDao() throws SQLException, IOException {
+        return new MySQLUserRoleDAO(createConnection());
     }
 
 }

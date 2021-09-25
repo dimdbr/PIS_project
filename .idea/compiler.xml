@@ -9,5 +9,6 @@
         <module name="PIS_project" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel target="14" />
   </component>
 </project>

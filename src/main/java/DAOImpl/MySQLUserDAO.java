@@ -19,9 +19,6 @@ public class MySQLUserDAO implements UserDAO {
         this.connection = connection;
     }
 
-    public Connection getConnection() {
-        return connection;
-    }
 
     @Override
     public void findAll() throws SQLException {
