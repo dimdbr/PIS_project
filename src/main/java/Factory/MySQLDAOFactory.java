@@ -1,10 +1,7 @@
 package Factory;
 
-import DAO.UserDAO;
-import DAO.UserRoleDAO;
-import DAOImpl.MySQLRoleDAO;
-import DAOImpl.MySQLUserDAO;
-import DAOImpl.MySQLUserRoleDAO;
+import DAO.*;
+import DAOImpl.*;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -16,6 +13,7 @@ import java.util.Properties;
 public class MySQLDAOFactory extends DAOFactory{
     public static final String DB_URL = "jdbc:mysql://localhost:3306/pis";
     private Connection connection;
+
     public Connection createConnection() throws IOException, SQLException {
         Properties properties = new Properties();
         String fileName = "src/main/resources/config.properties";
@@ -25,9 +23,7 @@ public class MySQLDAOFactory extends DAOFactory{
         return this.connection;
     }
 
-    public Connection getConnection() {
-        return connection;
-    }
+
 
     @Override
     public MySQLUserDAO getUserDao() throws SQLException, IOException {
@@ -43,4 +39,18 @@ public class MySQLDAOFactory extends DAOFactory{
         return new MySQLUserRoleDAO(createConnection());
     }
 
+    @Override
+    public StatusDAO getStatusDAO() throws SQLException, IOException{
+        return new MySQLStatusDAO(createConnection());
+    }
+
+    @Override
+    public RequestDAO getRequestDao() throws SQLException, IOException {
+        return new MySQLRequestDAO(createConnection());
+    }
+
+    @Override
+    public MasterRequestDAO getMasterRequestDao() throws SQLException, IOException {
+        return new MySQLMasterRequest(createConnection());
+    }
 }

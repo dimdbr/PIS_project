@@ -1,6 +1,5 @@
-import DAO.RoleDAO;
-import DAO.UserDAO;
-import DAO.UserRoleDAO;
+import DAO.*;
+import DTO.MasterRequest;
 import Factory.DAOFactory;
 import java.io.IOException;
 import java.sql.*;
@@ -36,14 +35,33 @@ public class JavaToMySql {
 
         UserRoleDAO userRoleDAO = mySQLFactory.getUserRoleDao();
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter User ID");
-        int userId = scanner.nextInt();
-        System.out.println("Enter Role ID");
-        int roleID = scanner.nextInt();
-        userRoleDAO.addRole(roleID,userId);
-        userRoleDAO.findAll();
+//        System.out.println("Enter User ID");
+//        int userId = scanner.nextInt();
+//        System.out.println("Enter Role ID");
+//        int roleID = scanner.nextInt();
+//        userRoleDAO.addRole(roleID,userId);
+//        userRoleDAO.findAll();
 
+        StatusDAO statusDAO = mySQLFactory.getStatusDAO();
+        statusDAO.findAll();
+//        System.out.println("Enter Status ID");
+//        int statusId = scanner.nextInt();
+//        statusDAO.findStatusById(statusId);
+//        statusDAO.closeConnection();
+        RequestDAO requestDAO = mySQLFactory.getRequestDao();
+//        requestDAO.createRequest(3,1200.15,"Some description");
+        requestDAO.findAll();
+//        requestDAO.findByUserId(4);
+//        requestDAO.findByUserId(3);
+//        requestDAO.findByStatus(1);
+//        requestDAO.changeStatus(1,2);
+//        requestDAO.findByStatus(2);
+        requestDAO.closeConnection();
 
+        MasterRequestDAO masterRequestDAO = mySQLFactory.getMasterRequestDao();
+        masterRequestDAO.createMasterRequestLink(4,1);
+        masterRequestDAO.findAll();
+        masterRequestDAO.closeConnection();
     }
 
 }
