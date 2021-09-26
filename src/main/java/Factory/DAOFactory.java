@@ -19,7 +19,7 @@ public abstract class DAOFactory {
 
     public abstract StatusDAO getStatusDAO() throws SQLException, IOException;
     public abstract RequestDAO getRequestDao() throws SQLException, IOException;
-//    public abstract ReviewDAO getReviewDao();
+    public abstract RequestReviewDAO getReviewDao() throws SQLException, IOException;
     public abstract MasterRequestDAO getMasterRequestDao() throws SQLException, IOException;
     public static DAOFactory getDAOFactory(int factoryDB) {
         switch (factoryDB) {

@@ -1,5 +1,6 @@
 import DAO.*;
 import DTO.MasterRequest;
+import DTO.RequestReview;
 import Factory.DAOFactory;
 import java.io.IOException;
 import java.sql.*;
@@ -59,9 +60,14 @@ public class JavaToMySql {
         requestDAO.closeConnection();
 
         MasterRequestDAO masterRequestDAO = mySQLFactory.getMasterRequestDao();
-        masterRequestDAO.createMasterRequestLink(4,1);
+//        masterRequestDAO.createMasterRequestLink(4,1);
         masterRequestDAO.findAll();
         masterRequestDAO.closeConnection();
+
+        RequestReviewDAO requestReviewDAO = mySQLFactory.getReviewDao();
+        requestReviewDAO.createReview(3,1,"Well done");
+        requestReviewDAO.findAll();
+        requestReviewDAO.closeConnection();
     }
 
 }

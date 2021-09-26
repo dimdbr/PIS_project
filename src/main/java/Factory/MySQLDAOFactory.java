@@ -53,4 +53,9 @@ public class MySQLDAOFactory extends DAOFactory{
     public MasterRequestDAO getMasterRequestDao() throws SQLException, IOException {
         return new MySQLMasterRequest(createConnection());
     }
+
+    @Override
+    public RequestReviewDAO getReviewDao()throws SQLException, IOException {
+        return new MySQLRequestReview(createConnection());
+    }
 }
