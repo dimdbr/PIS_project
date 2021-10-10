@@ -27,7 +27,7 @@
             <td><a href="updatePassword?id=<c:out value = '${user.id}'/>">Update Password</a></td>
             <td><a href="deleteUser?id=<c:out value ='${user.id}'/>">Delete User</a></td>
             <td><a href="addUserRole?id=<c:out value ='${user.id}'/>">Add User Roles</a></td>
-
+            <td><a href="createRequest?id=<c:out value = '${user.id}'/>">Create Request</a></td>
         </tr>
     </c:forEach>
 </table>

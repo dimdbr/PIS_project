@@ -1,6 +1,7 @@
 package Servlets;
 
-import DAO.UserRoleDAO;
+import DAO.RequestDAO;
+import DTO.Request;
 import Factory.DAOFactory;
 
 import javax.naming.NamingException;
@@ -11,37 +12,33 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
-@WebServlet("/deleteUserRole")
-public class DeleteUserRoleServlet extends HttpServlet {
+@WebServlet("/getAllRequests")
+public class GetAllRequestsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String suid = req.getParameter("uid");
-        int uid = Integer.parseInt(suid,10);
-        String srid = req.getParameter("rid");
-        int rid = Integer.parseInt(srid,10);
-        System.out.println(uid);
-        System.out.println(rid);
         DAOFactory mySQLFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
-        UserRoleDAO userRoleDAO  =null;
+        RequestDAO requestDAO = null;
         try {
-            userRoleDAO = mySQLFactory.getUserRoleDao();
+            requestDAO = mySQLFactory.getRequestDao();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } catch (NamingException e) {
             e.printStackTrace();
         }
+        ArrayList<Request> requests = new ArrayList<>();
         try {
-            userRoleDAO.deleteRole(rid,uid);
+            requests = requestDAO.findAll();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        resp.sendRedirect("getAllUsersRoles");
+        req.setAttribute("listRequests",requests);
+        getServletContext().getRequestDispatcher("/request-list.jsp").forward(req,resp);
         try {
-            userRoleDAO.closeConnection();
+            requestDAO.closeConnection();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
     }
 }

@@ -1,9 +1,12 @@
 package DAO;
 
+import DTO.Status;
+
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public interface StatusDAO {
-    void findAll() throws SQLException;
+    ArrayList<Status> findAll() throws SQLException;
 
     void findStatusById(int id) throws SQLException;
 

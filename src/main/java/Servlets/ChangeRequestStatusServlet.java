@@ -1,7 +1,10 @@
 package Servlets;
 
-import DAO.UserDAO;
-import DTO.User;
+import DAO.RequestDAO;
+import DAO.StatusDAO;
+import DAO.UserRoleDAO;
+import DTO.Request;
+import DTO.Status;
 import Factory.DAOFactory;
 
 import javax.naming.NamingException;
@@ -12,63 +15,62 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
-@WebServlet("/updatePassword")
-public class UpdateUserServlet extends HttpServlet {
+@WebServlet("/changeStatus")
+public class ChangeRequestStatusServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         DAOFactory mySQLFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
-        UserDAO userDAO = null;
+        StatusDAO statusDAO = null;
         try {
-            userDAO = mySQLFactory.getUserDao();
+            statusDAO = mySQLFactory.getStatusDAO();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } catch (NamingException e) {
             e.printStackTrace();
         }
-        String sid = req.getParameter("id");
-        int id = Integer.parseInt(sid,10);
-        String password = new String();
+        ArrayList<Status> statuses = new ArrayList<>();
         try {
-            User user =  userDAO.getUserById(id);
-            password = user.getPassword();
+            statuses = statusDAO.findAll();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        req.setAttribute("oldPassword",password);
-        getServletContext().getRequestDispatcher("/update-password.jsp").forward(req,resp);
+        req.setAttribute("statuses", statuses);
+        getServletContext().getRequestDispatcher("/changeStatus.jsp").forward(req,resp);
         try {
-            userDAO.closeConnection();
+            statusDAO.closeConnection();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String sid = req.getParameter("id");
+        int id = Integer.parseInt(sid);
         DAOFactory mySQLFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
-        UserDAO userDAO = null;
+        RequestDAO requestDAO = null;
         try {
-            userDAO = mySQLFactory.getUserDao();
+            requestDAO = mySQLFactory.getRequestDao();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } catch (NamingException e) {
             e.printStackTrace();
         }
-        String sid = req.getParameter("id");
-        int id = Integer.parseInt(sid,10);
-        String newPassword = req.getParameter("password");
+        String sStatusId = req.getParameter("status");
+        int statusId = Integer.parseInt(sStatusId);
         try {
-            userDAO.updateUserPassword(id,newPassword);
+            requestDAO.changeStatus(id,statusId);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        resp.sendRedirect("getAllRequests");
         try {
-            userDAO.closeConnection();
+            requestDAO.closeConnection();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        resp.sendRedirect("getAllUsers");
-
     }
 }

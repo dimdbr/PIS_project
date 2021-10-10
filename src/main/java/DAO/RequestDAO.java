@@ -1,9 +1,12 @@
 package DAO;
 
+import DTO.Request;
+
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public interface RequestDAO {
-    void findAll() throws SQLException;
+    ArrayList<Request> findAll() throws SQLException;
 
     void findById(int id) throws SQLException;
 

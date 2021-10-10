@@ -18,12 +18,13 @@ Possible Roles for user ${userId}
     <c:when test="${empty roles}">
         User have all roles
     </c:when>
-    <c:otherwise><form action="" method="post">
+    <c:otherwise>
+        <form action="" method="post">
         <select name="role" id="">
 
             <c:forEach var="role" items="${roles}">
-            <c:if test="${role!=selected}">
-            <option value="${role}">${role}</option>
+            <c:if test="${role.id!=selected}">
+            <option value="${role.id}">${role.name}</option>
             </c:if>
             </c:forEach>
             <input type="submit" value="Add Role">

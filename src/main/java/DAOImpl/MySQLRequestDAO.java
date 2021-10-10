@@ -6,6 +6,7 @@ import DTO.User;
 import DTO.UserRole;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class MySQLRequestDAO implements RequestDAO {
     private Connection connection;
@@ -21,23 +22,26 @@ public class MySQLRequestDAO implements RequestDAO {
     }
 
     @Override
-    public void findAll() throws SQLException {
+    public ArrayList<Request> findAll() throws SQLException {
         Statement statement;
         ResultSet rs;
         statement = connection.createStatement();
 
         rs = statement.executeQuery(getAll);
-        Request request = new Request();
+        ArrayList<Request> requests = new ArrayList<>();
+
         while (rs.next()) {
+            Request request = new Request();
             request.setId(rs.getInt("id"));
             request.setFixPrice(rs.getDouble("fix_price"));
             request.setUserId(rs.getInt("user_id"));
             request.setStatusId(rs.getInt("status_id"));
             request.setDescription(rs.getString("description"));
-            System.out.println(request);
+            requests.add(request);
         }
         rs.close();
         statement.close();
+        return requests;
     }
 
     @Override

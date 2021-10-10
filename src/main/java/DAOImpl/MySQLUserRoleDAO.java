@@ -35,7 +35,6 @@ public class MySQLUserRoleDAO implements UserRoleDAO {
 
         rs.close();
         statement.close();
-        connection.close();
         return userRoles;
     }
 

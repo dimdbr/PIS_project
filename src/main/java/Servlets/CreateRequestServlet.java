@@ -1,6 +1,6 @@
 package Servlets;
 
-import DAO.UserRoleDAO;
+import DAO.RequestDAO;
 import Factory.DAOFactory;
 
 import javax.naming.NamingException;
@@ -12,36 +12,41 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
-@WebServlet("/deleteUserRole")
-public class DeleteUserRoleServlet extends HttpServlet {
+@WebServlet("/createRequest")
+public class CreateRequestServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String suid = req.getParameter("uid");
-        int uid = Integer.parseInt(suid,10);
-        String srid = req.getParameter("rid");
-        int rid = Integer.parseInt(srid,10);
-        System.out.println(uid);
-        System.out.println(rid);
+        String id = req.getParameter("id");
+        req.setAttribute("userId",Integer.parseInt(id));
+        getServletContext().getRequestDispatcher("/create-request.jsp").forward(req,resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         DAOFactory mySQLFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
-        UserRoleDAO userRoleDAO  =null;
+        RequestDAO requestDAO = null;
         try {
-            userRoleDAO = mySQLFactory.getUserRoleDao();
+            requestDAO = mySQLFactory.getRequestDao();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } catch (NamingException e) {
             e.printStackTrace();
         }
+        String sid = req.getParameter("id");
+        int id = Integer.parseInt(sid);
+        String sFixPrice = req.getParameter("fixPrice");
+        double fixPrice  = Double.parseDouble(sFixPrice);
+        String description = req.getParameter("description");
         try {
-            userRoleDAO.deleteRole(rid,uid);
+            requestDAO.createRequest(id,fixPrice,description);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        resp.sendRedirect("getAllUsersRoles");
         try {
-            userRoleDAO.closeConnection();
+            requestDAO.closeConnection();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
+        resp.sendRedirect("getAllRequests");
     }
 }

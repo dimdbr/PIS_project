@@ -46,14 +46,11 @@ public class AddUserRoleServlet extends HttpServlet {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        ArrayList<Integer> rolesId = new ArrayList<>();
-        for (Role e : roles) {
-            rolesId.add(e.getId());
-        }
-        ArrayList<Integer> possibleRoles = new ArrayList<>();
-        for (int i : rolesId) {
+
+        ArrayList<Role> possibleRoles = new ArrayList<>();
+        for (Role i : roles) {
             try {
-                if (!userRoleDAO.findIfRecordExist(userId,i ))
+                if (!userRoleDAO.findIfRecordExist(userId,i.getId()))
                 {
                     possibleRoles.add(i);
                 }
@@ -63,7 +60,16 @@ public class AddUserRoleServlet extends HttpServlet {
         }
         req.setAttribute("roles",possibleRoles);
         getServletContext().getRequestDispatcher("/addUserRole.jsp").forward(req,resp);
-
+        try {
+            userRoleDAO.closeConnection();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        try {
+            roleDAO.closeConnection();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
 
     }
 
@@ -88,5 +94,10 @@ public class AddUserRoleServlet extends HttpServlet {
             throwables.printStackTrace();
         }
         resp.sendRedirect("getAllUsersRoles");
+        try {
+            userRoleDAO.closeConnection();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }
