@@ -28,6 +28,7 @@
             <td><a href="deleteUser?id=<c:out value ='${user.id}'/>">Delete User</a></td>
             <td><a href="addUserRole?id=<c:out value ='${user.id}'/>">Add User Roles</a></td>
             <td><a href="createRequest?id=<c:out value = '${user.id}'/>">Create Request</a></td>
+            <td><a href="takeRequest?id=<c:out value = '${user.id}'/>">Take Request</a></td>
         </tr>
     </c:forEach>
 </table>

@@ -14,7 +14,7 @@ public interface RequestDAO {
 
     void findByUserId(int userId) throws SQLException;
 
-    void findByStatus(int statusId) throws SQLException;
+    ArrayList<Request> findByStatus(int statusId) throws SQLException;
 
     void changeStatus(int requestId, int statusId) throws SQLException;
 

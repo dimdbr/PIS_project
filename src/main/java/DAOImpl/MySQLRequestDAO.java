@@ -97,26 +97,28 @@ public class MySQLRequestDAO implements RequestDAO {
     }
 
     @Override
-    public void findByStatus(int statusId) throws SQLException {
+    public ArrayList<Request> findByStatus(int statusId) throws SQLException {
 
         PreparedStatement preparedStatement = connection.prepareStatement(findRequestByStatusId);
         preparedStatement.setInt(1, statusId);
         ResultSet rs = preparedStatement.executeQuery();
-        Request request = new Request();
+        ArrayList<Request> requests = new ArrayList<>();
         if (rs.isBeforeFirst() == false) {
             System.out.println("No requests with that status");
         } else {
             while (rs.next()) {
+                Request request = new Request();
                 request.setId(rs.getInt("id"));
                 request.setFixPrice(rs.getDouble("fix_price"));
                 request.setUserId(rs.getInt("user_id"));
                 request.setStatusId(rs.getInt("status_id"));
                 request.setDescription(rs.getString("description"));
-                System.out.println(request);
+                requests.add(request);
             }
         }
         rs.close();
         preparedStatement.close();
+        return requests;
     }
 
     @Override
