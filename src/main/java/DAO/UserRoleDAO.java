@@ -1,9 +1,12 @@
 package DAO;
 
+import DTO.UserRole;
+
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public interface UserRoleDAO {
-    void findAll() throws SQLException;
+    ArrayList<UserRole> findAll() throws SQLException;
 
     boolean findIfRecordExist(int userId, int roleID) throws SQLException;
 

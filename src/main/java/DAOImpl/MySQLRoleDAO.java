@@ -5,6 +5,7 @@ import DTO.Role;
 import DTO.User;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class MySQLRoleDAO implements RoleDAO {
     private Connection connection;
@@ -19,19 +20,22 @@ public class MySQLRoleDAO implements RoleDAO {
     }
 
     @Override
-    public void findAll() throws SQLException {
+    public ArrayList<Role> findAll() throws SQLException {
         Statement statement;
         ResultSet rs;
         statement = connection.createStatement();
         rs = statement.executeQuery(getAll);
-        Role role = new Role();
+        ArrayList<Role> roles = new ArrayList<Role>();
         while (rs.next()) {
+            Role role = new Role();
             role.setId(rs.getInt("id"));
             role.setName(rs.getString("name"));
-            System.out.println(role);
+            roles.add(role);
         }
+
         rs.close();
         statement.close();
+        return roles;
     }
 
     @Override

@@ -4,6 +4,7 @@ import DAO.UserDAO;
 import DTO.User;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class MySQLUserDAO implements UserDAO {
 
@@ -21,23 +22,24 @@ public class MySQLUserDAO implements UserDAO {
 
 
     @Override
-    public void findAll() throws SQLException {
+    public ArrayList<User> findAll() throws SQLException {
+        ArrayList<User> userList = new ArrayList<>();
         Statement statement;
         ResultSet rs;
         statement = connection.createStatement();
         rs = statement.executeQuery(getAll);
-        User user = new User();
         while (rs.next()) {
+            User user = new User();
             user.setId(rs.getInt("id"));
             user.setFirst_name(rs.getString("first_name"));
             user.setLast_name(rs.getString("last_name"));
             user.setLogin(rs.getString("login"));
             user.setPassword(rs.getString("password"));
-            System.out.println(user);
+            userList.add(user);
         }
         rs.close();
         statement.close();
-
+        return userList;
     }
 
     @Override
@@ -69,7 +71,7 @@ public class MySQLUserDAO implements UserDAO {
     }
 
     @Override
-    public void getUserById(int id) throws SQLException {
+    public User getUserById(int id) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(findUSerById);
         preparedStatement.setInt(1, id);
         ResultSet rs = preparedStatement.executeQuery();
@@ -80,11 +82,11 @@ public class MySQLUserDAO implements UserDAO {
             user.setLast_name(rs.getString("last_name"));
             user.setLogin(rs.getString("login"));
             user.setPassword(rs.getString("password"));
-            System.out.println(user);
+
         }
         rs.close();
         preparedStatement.close();
-
+        return user;
     }
 
     @Override

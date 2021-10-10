@@ -2,13 +2,15 @@ import DAO.*;
 import DTO.MasterRequest;
 import DTO.RequestReview;
 import Factory.DAOFactory;
+
+import javax.naming.NamingException;
 import java.io.IOException;
 import java.sql.*;
 import java.util.Scanner;
 
 public class JavaToMySql {
 
-    public static void main(String args[]) throws SQLException, IOException {
+    public static void main(String args[]) throws SQLException, IOException, NamingException {
 
         DAOFactory mySQLFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
 
