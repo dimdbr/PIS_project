@@ -1,29 +1,24 @@
-package Servlets;
+package services;
 
 import DAO.MasterRequestDAO;
-import DTO.Request;
 import DAO.RequestDAO;
 import DAO.UserRoleDAO;
+import DTO.Request;
 import Factory.DAOFactory;
-
 
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-@WebServlet("/takeRequest")
-public class SelectRequestServlet extends HttpServlet {
+public class SelectRequestService implements ServiceInterface {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void get(HttpServletRequest req, HttpServletResponse resp, DAOFactory mySQLFactory) throws ServletException, IOException {
         String sid = req.getParameter("id");
         int userId = Integer.parseInt(sid, 10);
-        DAOFactory mySQLFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
         UserRoleDAO userRoleDAO = null;
         try {
             userRoleDAO = mySQLFactory.getUserRoleDao();
@@ -48,16 +43,16 @@ public class SelectRequestServlet extends HttpServlet {
         }
         req.setAttribute("isMaster", isMaster);
         ArrayList<Request> requests = new ArrayList<>();
-        if(isMaster)
-        {
+        if (isMaster) {
             try {
                 requests = requestDAO.findByStatus(1);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
-            req.setAttribute("possibleRequests",requests);
+            req.setAttribute("requests", requests);
         }
-        getServletContext().getRequestDispatcher("/takeRequest.jsp").forward(req,resp);
+        System.out.println(requests);
+        req.getServletContext().getRequestDispatcher("/takeRequest.jsp").forward(req, resp);
         try {
             userRoleDAO.closeConnection();
         } catch (SQLException throwables) {
@@ -71,10 +66,9 @@ public class SelectRequestServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void post(HttpServletRequest req, HttpServletResponse resp, DAOFactory mySQLFactory) throws IOException {
         String sid = req.getParameter("id");
         int userId = Integer.parseInt(sid, 10);
-        DAOFactory mySQLFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
         String sRequestId = req.getParameter("possibleRequest");
         int requestId = Integer.parseInt(sRequestId);
         MasterRequestDAO masterRequestDAO = null;
@@ -94,12 +88,12 @@ public class SelectRequestServlet extends HttpServlet {
             e.printStackTrace();
         }
         try {
-            masterRequestDAO.createMasterRequestLink(userId,requestId);
+            masterRequestDAO.createMasterRequestLink(userId, requestId);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         try {
-            requestDAO.changeStatus(requestId,2);
+            requestDAO.changeStatus(requestId, 2);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -114,7 +108,6 @@ public class SelectRequestServlet extends HttpServlet {
             throwables.printStackTrace();
         }
         resp.sendRedirect("getAllRequests");
-
 
     }
 }
