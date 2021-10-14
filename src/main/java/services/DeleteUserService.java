@@ -1,24 +1,20 @@
-package Servlets;
+package services;
 
 import DAO.UserDAO;
 import Factory.DAOFactory;
 
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
-@WebServlet("/deleteUser")
-public class DeleteUserServlet extends HttpServlet {
+public class DeleteUserService implements ServiceInterface {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void get(HttpServletRequest req, HttpServletResponse resp, DAOFactory mySQLFactory) throws ServletException, IOException {
         String sid = req.getParameter("id");
         int id = Integer.parseInt(sid,10);
-        DAOFactory mySQLFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
         UserDAO userDAO = null;
         try {
             userDAO = mySQLFactory.getUserDao();
@@ -38,8 +34,10 @@ public class DeleteUserServlet extends HttpServlet {
             throwables.printStackTrace();
         }
         resp.sendRedirect("getAllUsers");
-
     }
 
+    @Override
+    public void post(HttpServletRequest req, HttpServletResponse resp, DAOFactory mySQLFactory) throws IOException {
 
+    }
 }

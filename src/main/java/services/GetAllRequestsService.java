@@ -1,4 +1,4 @@
-package Servlets;
+package services;
 
 import DAO.RequestDAO;
 import DTO.Request;
@@ -6,19 +6,15 @@ import Factory.DAOFactory;
 
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-@WebServlet("/getAllRequests")
-public class GetAllRequestsServlet extends HttpServlet {
+public class GetAllRequestsService implements ServiceInterface {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        DAOFactory mySQLFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
+    public void get(HttpServletRequest req, HttpServletResponse resp, DAOFactory mySQLFactory) throws ServletException, IOException {
         RequestDAO requestDAO = null;
         try {
             requestDAO = mySQLFactory.getRequestDao();
@@ -34,11 +30,16 @@ public class GetAllRequestsServlet extends HttpServlet {
             throwables.printStackTrace();
         }
         req.setAttribute("listRequests",requests);
-        getServletContext().getRequestDispatcher("/request-list.jsp").forward(req,resp);
+        req.getServletContext().getRequestDispatcher("/request-list.jsp").forward(req,resp);
         try {
             requestDAO.closeConnection();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+    }
+
+    @Override
+    public void post(HttpServletRequest req, HttpServletResponse resp, DAOFactory mySQLFactory) throws IOException {
+
     }
 }

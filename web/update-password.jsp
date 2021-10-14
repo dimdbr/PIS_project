@@ -14,6 +14,7 @@
 <body>
 Old password = <c:out value="${oldPassword}"/>
 <form action="" method="post">
+    <input type="hidden" name="postAction" value="updateUserPassword"/>
     Password : <input type="password" name="password">
     <br><br>
     <input type="submit" value="Update and Save">

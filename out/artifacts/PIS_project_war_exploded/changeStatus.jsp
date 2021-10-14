@@ -7,6 +7,7 @@
 <body>
 Possible Statuses
 <form action="" method="post">
+    <input type="hidden" name="postAction" value="changeRequestStatus">
     <select name="status" id="">
         <c:forEach var="status" items="${statuses}">
             <option value="${status.id}">${status.status}</option>

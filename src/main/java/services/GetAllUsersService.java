@@ -1,29 +1,24 @@
-package Servlets;
+package services;
 
 import DAO.UserDAO;
 import DTO.User;
 import Factory.DAOFactory;
 
 import javax.naming.NamingException;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-@WebServlet("/getAllUsers")
-public class GetAllUsersServlet extends HttpServlet {
+public class GetAllUsersService implements ServiceInterface {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        DAOFactory mySQLFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
+    public void get(HttpServletRequest req, HttpServletResponse resp, DAOFactory mySQLFactory) throws ServletException, IOException {
         UserDAO userDAO = null;
         try {
             userDAO = mySQLFactory.getUserDao();
-        } catch (SQLException throwables) {
+        } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
         } catch (NamingException e) {
             e.printStackTrace();
@@ -35,7 +30,7 @@ public class GetAllUsersServlet extends HttpServlet {
             throwables.printStackTrace();
         }
         req.setAttribute("listUser",users);
-        getServletContext().getRequestDispatcher("/user-list.jsp").forward(req,resp);
+        req.getServletContext().getRequestDispatcher("/user-list.jsp").forward(req,resp);
         try {
             userDAO.closeConnection();
         } catch (SQLException throwables) {
@@ -44,4 +39,8 @@ public class GetAllUsersServlet extends HttpServlet {
     }
 
 
+    @Override
+    public void post(HttpServletRequest req, HttpServletResponse resp, DAOFactory mySQLFactory) {
+
+    }
 }

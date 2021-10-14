@@ -13,6 +13,7 @@
 </head>
 <body>
 <form action="" method="post">
+    <input type="hidden" name="postAction" value="createUser"/>
     Firstname: <input name="firstName" />
     <br><br>
     Lastname: <input name="lastName" />
@@ -22,6 +23,7 @@
     Password: <input name="password" type="password"/>
     <br><br>
     <input type="submit" value="Submit" />
+
 </form>
 </body>
 </html>

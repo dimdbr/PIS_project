@@ -1,4 +1,4 @@
-package Servlets;
+package services;
 
 import DAO.UserDAO;
 import DTO.User;
@@ -6,18 +6,14 @@ import Factory.DAOFactory;
 
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
-@WebServlet("/updatePassword")
-public class UpdateUserServlet extends HttpServlet {
+public class UpdateUserService implements ServiceInterface {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        DAOFactory mySQLFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
+    public void get(HttpServletRequest req, HttpServletResponse resp, DAOFactory mySQLFactory) throws ServletException, IOException {
         UserDAO userDAO = null;
         try {
             userDAO = mySQLFactory.getUserDao();
@@ -36,7 +32,7 @@ public class UpdateUserServlet extends HttpServlet {
             throwables.printStackTrace();
         }
         req.setAttribute("oldPassword",password);
-        getServletContext().getRequestDispatcher("/update-password.jsp").forward(req,resp);
+        req.getServletContext().getRequestDispatcher("/update-password.jsp").forward(req,resp);
         try {
             userDAO.closeConnection();
         } catch (SQLException throwables) {
@@ -45,8 +41,7 @@ public class UpdateUserServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        DAOFactory mySQLFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
+    public void post(HttpServletRequest req, HttpServletResponse resp, DAOFactory mySQLFactory) throws IOException {
         UserDAO userDAO = null;
         try {
             userDAO = mySQLFactory.getUserDao();
@@ -69,6 +64,5 @@ public class UpdateUserServlet extends HttpServlet {
             throwables.printStackTrace();
         }
         resp.sendRedirect("getAllUsers");
-
     }
 }

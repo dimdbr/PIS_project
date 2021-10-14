@@ -1,26 +1,25 @@
-package Servlets;
+package services;
 
-import DAO.UserDAO;
 import DAO.UserRoleDAO;
-import DTO.UserRole;
 import Factory.DAOFactory;
 
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
-@WebServlet("/getAllUsersRoles")
-public class GetAllUsersRolesServlet extends HttpServlet {
+public class DeleteUserRoleService implements ServiceInterface {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        DAOFactory mySQLFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
-        UserRoleDAO userRoleDAO = null;
+    public void get(HttpServletRequest req, HttpServletResponse resp, DAOFactory mySQLFactory) throws ServletException, IOException {
+        String suid = req.getParameter("uid");
+        int uid = Integer.parseInt(suid,10);
+        String srid = req.getParameter("rid");
+        int rid = Integer.parseInt(srid,10);
+        System.out.println(uid);
+        System.out.println(rid);
+        UserRoleDAO userRoleDAO  =null;
         try {
             userRoleDAO = mySQLFactory.getUserRoleDao();
         } catch (SQLException throwables) {
@@ -28,14 +27,12 @@ public class GetAllUsersRolesServlet extends HttpServlet {
         } catch (NamingException e) {
             e.printStackTrace();
         }
-        ArrayList<UserRole> userRoles = null;
         try {
-            userRoles = userRoleDAO.findAll();
+            userRoleDAO.deleteRole(rid,uid);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        req.setAttribute("listUserRoles",userRoles);
-        getServletContext().getRequestDispatcher("/userRole-list.jsp").forward(req,resp);
+        resp.sendRedirect("getAllUsersRoles");
         try {
             userRoleDAO.closeConnection();
         } catch (SQLException throwables) {
@@ -43,5 +40,8 @@ public class GetAllUsersRolesServlet extends HttpServlet {
         }
     }
 
+    @Override
+    public void post(HttpServletRequest req, HttpServletResponse resp, DAOFactory mySQLFactory) throws IOException {
 
+    }
 }

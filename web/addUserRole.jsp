@@ -20,6 +20,7 @@ Possible Roles for user ${userId}
     </c:when>
     <c:otherwise>
         <form action="" method="post">
+            <input type="hidden" name="postAction" value="addUserRole"/>
         <select name="role" id="">
 
             <c:forEach var="role" items="${roles}">

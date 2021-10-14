@@ -15,6 +15,7 @@
 <body>
 Creating request for user ${userId}
 <form action="" method="post">
+    <input type="hidden" name="postAction" value="createRequest"/>
     Fix Price :<input type="number" name="fixPrice"/>
     <br></br>
     Description : <input type="text" name="description"/>

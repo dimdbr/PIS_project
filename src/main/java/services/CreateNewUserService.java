@@ -1,31 +1,28 @@
-package Servlets;
+package services;
 
 import DAO.UserDAO;
 import Factory.DAOFactory;
 
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
-@WebServlet("/createUser")
-public class CreateUserServlet extends HttpServlet {
+public class CreateNewUserService implements ServiceInterface {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        getServletContext().getRequestDispatcher("/create-user.jsp").forward(req,resp);
+    public void get(HttpServletRequest req, HttpServletResponse resp, DAOFactory mySQLFactory) throws ServletException, IOException {
+        req.getServletContext().getRequestDispatcher("/create-user.jsp").forward(req,resp);
+
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        DAOFactory mySQLFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
+    public void post(HttpServletRequest req, HttpServletResponse resp, DAOFactory mySQLFactory) throws IOException {
         UserDAO userDAO = null;
         try {
             userDAO = mySQLFactory.getUserDao();
-        } catch (SQLException throwables) {
+        } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
         } catch (NamingException e) {
             e.printStackTrace();
