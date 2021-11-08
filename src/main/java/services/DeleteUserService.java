@@ -18,12 +18,11 @@ public class DeleteUserService implements ServiceInterface {
         UserDAO userDAO = null;
         try {
             userDAO = mySQLFactory.getUserDao();
-        } catch (SQLException throwables) {
+        } catch (SQLException | NamingException throwables) {
             throwables.printStackTrace();
-        } catch (NamingException e) {
-            e.printStackTrace();
         }
         try {
+            assert userDAO != null;
             userDAO.deleteUserById(id);
         } catch (SQLException throwables) {
             throwables.printStackTrace();

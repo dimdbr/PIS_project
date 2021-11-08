@@ -1,15 +1,25 @@
 package DTO;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "request_review")
 public class RequestReview {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private int userId;
-    private int requestId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "request_id")
+    private Request request;
+    @Column(name = "text_review")
     private String textReview;
 
     public RequestReview(int id, int userId, int requestId, String textReview) {
         this.id = id;
-        this.userId = userId;
-        this.requestId = requestId;
         this.textReview = textReview;
     }
 
@@ -24,21 +34,34 @@ public class RequestReview {
         this.id = id;
     }
 
-    public int getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public int getRequestId() {
-        return requestId;
+    public Request getRequest() {
+        return request;
     }
 
-    public void setRequestId(int requestId) {
-        this.requestId = requestId;
+    public void setRequest(Request request) {
+        this.request = request;
     }
+
+//
+//    public void setUserId(int userId) {
+//        this.userId = userId;
+//    }
+//
+//    public int getRequestId() {
+//        return requestId;
+//    }
+//
+//    public void setRequestId(int requestId) {
+//        this.requestId = requestId;
+//    }
 
     public String getTextReview() {
         return textReview;
@@ -48,13 +71,5 @@ public class RequestReview {
         this.textReview = textReview;
     }
 
-    @Override
-    public String toString() {
-        return "RequestReview{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", requestId=" + requestId +
-                ", textReview='" + textReview + '\'' +
-                '}';
-    }
+
 }

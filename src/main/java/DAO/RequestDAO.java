@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public interface RequestDAO {
     ArrayList<Request> findAll() throws SQLException;
 
-    void findById(int id) throws SQLException;
+    Request findById(int id) throws SQLException;
 
     void createRequest(int userId,double fixPrice,String description ) throws SQLException;
 

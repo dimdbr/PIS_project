@@ -44,6 +44,7 @@ public class MyServlet extends HttpServlet {
         hashMap.put("/createRequest",createRequest);
         hashMap.put("/takeRequest",takeRequest);
         ServiceInterface service = hashMap.get(action);
+        System.out.println(service);
         service.get(req, resp, mySQLFactory);
 
 
@@ -61,6 +62,7 @@ public class MyServlet extends HttpServlet {
         hashMap.put("takeRequest",takeRequest);
         System.out.println(postAction);
         ServiceInterface service = hashMap.get(postAction);
+
         service.post(req, resp, mySQLFactory);
 
     }
