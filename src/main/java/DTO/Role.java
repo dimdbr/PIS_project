@@ -1,9 +1,17 @@
 package DTO;
 
+import javax.persistence.*;
+import java.util.List;
+
+@Entity
+@Table(name = "roles")
 public class Role {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name;
-
+    @ManyToMany(mappedBy = "roles",fetch = FetchType.LAZY)
+    private List<User> users;
     public int getId() {
         return id;
     }
@@ -26,6 +34,18 @@ public class Role {
     }
     public Role() {
 
+    }
+
+    public List<User> getUserList() {
+        return users;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.users = userList;
+    }
+
+    public Role(String name) {
+        this.name = name;
     }
 
     @Override

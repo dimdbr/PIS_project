@@ -2,13 +2,29 @@ package DAOImpl;
 
 import DAO.UserDAO;
 import DTO.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.stereotype.Repository;
+//import org.springframework.stereotype.Service;
 
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.sql.*;
 import java.util.ArrayList;
 
+//@Service
+//@Repository
+//@Transactional
 public class MySQLUserDAO implements UserDAO {
+    private final Connection connection;
+//    @PersistenceContext(unitName = "unit")
+//    @Autowired
+    private EntityManager entityManager;
 
-    private Connection connection;
     public static final String getAll = "select *  from users";
     public static final String createUser = "Insert into users (first_name,last_name,login,password)" + "values(?,?,?,?)";
     public static final String deleteUserByLogin = "Delete from users where login = (?)";
@@ -20,82 +36,76 @@ public class MySQLUserDAO implements UserDAO {
         this.connection = connection;
     }
 
+    public MySQLUserDAO(Connection connection, EntityManager entityManager) {
+        this.connection = connection;
+        this.entityManager = entityManager;
+    }
+
 
     @Override
     public ArrayList<User> findAll() throws SQLException {
-        ArrayList<User> userList = new ArrayList<>();
-        Statement statement;
-        ResultSet rs;
-        statement = connection.createStatement();
-        rs = statement.executeQuery(getAll);
-        while (rs.next()) {
-            User user = new User();
-            user.setId(rs.getInt("id"));
-            user.setFirst_name(rs.getString("first_name"));
-            user.setLast_name(rs.getString("last_name"));
-            user.setLogin(rs.getString("login"));
-            user.setPassword(rs.getString("password"));
-            userList.add(user);
-        }
-        rs.close();
-        statement.close();
-        return userList;
+
+        System.out.println(entityManager);
+        return (ArrayList<User>) entityManager.createQuery("select u from User u").getResultList();
     }
 
     @Override
     public void createUser(String firstName, String lastName, String login, String password) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(createUser);
-        preparedStatement.setString(1, firstName);
-        preparedStatement.setString(2, lastName);
-        preparedStatement.setString(3, login);
-        preparedStatement.setString(4, password);
-        preparedStatement.execute();
-        preparedStatement.close();
 
+        User user = new User(firstName, lastName, login, password);
+        entityManager.getTransaction().begin();
+        entityManager.persist(user);
+        entityManager.getTransaction().commit();
     }
 
     @Override
     public void deleteUserById(int userId) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(deleteUserById);
-        preparedStatement.setInt(1, userId);
-        preparedStatement.execute();
-        preparedStatement.close();
+//        PreparedStatement preparedStatement = connection.prepareStatement(deleteUserById);
+//        preparedStatement.setInt(1, userId);
+//        preparedStatement.execute();
+//        preparedStatement.close();
+        User user = entityManager.find(User.class, userId);
+        if (user != null) {
+            entityManager.getTransaction().begin();
+            entityManager.remove(user);
+            entityManager.getTransaction().commit();
+        }
     }
 
     @Override
     public void deleteUserByLogin(String userLogin) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(deleteUserByLogin);
-        preparedStatement.setString(1, userLogin);
-        preparedStatement.execute();
-        preparedStatement.close();
+//        PreparedStatement preparedStatement = connection.prepareStatement(deleteUserByLogin);
+//        preparedStatement.setString(1, userLogin);
+//        preparedStatement.execute();
+//        preparedStatement.close();
+        User user = entityManager.find(User.class, userLogin);
+        if (user != null) {
+            entityManager.getTransaction().begin();
+            entityManager.remove(user);
+            entityManager.getTransaction().commit();
+        }
+
     }
 
     @Override
     public User getUserById(int id) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(findUSerById);
-        preparedStatement.setInt(1, id);
-        ResultSet rs = preparedStatement.executeQuery();
-        User user = new User();
-        while (rs.next()) {
-            user.setId(rs.getInt("id"));
-            user.setFirst_name(rs.getString("first_name"));
-            user.setLast_name(rs.getString("last_name"));
-            user.setLogin(rs.getString("login"));
-            user.setPassword(rs.getString("password"));
 
-        }
-        rs.close();
-        preparedStatement.close();
-        return user;
+        return entityManager.find(User.class, id);
+
     }
 
     @Override
     public void updateUserPassword(int userId, String newPassword) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(updateUserPassword);
-        preparedStatement.setString(1, newPassword);
-        preparedStatement.setInt(2, userId);
-        preparedStatement.execute();
-        preparedStatement.close();
+//        PreparedStatement preparedStatement = connection.prepareStatement(updateUserPassword);
+//        preparedStatement.setString(1, newPassword);
+//        preparedStatement.setInt(2, userId);
+//        preparedStatement.execute();
+//        preparedStatement.close();
+        User user = getUserById(userId);
+        user.setPassword(newPassword);
+        entityManager.getTransaction().begin();
+        entityManager.merge(user);
+        entityManager.getTransaction().commit();
 
     }
 

@@ -7,17 +7,19 @@ import db.ConnectionPool;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.sql.DataSource;
-import java.io.FileInputStream;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
+
 
 public class MySQLDAOFactory extends DAOFactory{
     public static final String DB_URL = "jdbc:mysql://localhost:3306/pis";
     private Connection connection;
+    EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("unit");
+    EntityManager entityManager = entityManagerFactory.createEntityManager();
 
     public Connection createConnection() throws IOException, SQLException, NamingException {
 //        Properties properties = new Properties();
@@ -31,39 +33,37 @@ public class MySQLDAOFactory extends DAOFactory{
 
     }
 
-
-
     @Override
     public MySQLUserDAO getUserDao() throws SQLException, IOException, NamingException {
-        return new MySQLUserDAO(createConnection());
+        return new MySQLUserDAO(createConnection(),entityManager);
     }
     @Override
     public MySQLRoleDAO getRoleDao() throws SQLException, IOException, NamingException {
-        return new MySQLRoleDAO(createConnection());
+        return new MySQLRoleDAO(createConnection(),entityManager);
     }
 
     @Override
     public UserRoleDAO getUserRoleDao() throws SQLException, IOException, NamingException {
-        return new MySQLUserRoleDAO(createConnection());
+        return new MySQLUserRoleDAO(createConnection(),entityManager);
     }
 
     @Override
     public StatusDAO getStatusDAO() throws SQLException, IOException, NamingException {
-        return new MySQLStatusDAO(createConnection());
+        return new MySQLStatusDAO(createConnection(),entityManager);
     }
 
     @Override
     public RequestDAO getRequestDao() throws SQLException, IOException, NamingException {
-        return new MySQLRequestDAO(createConnection());
+        return new MySQLRequestDAO(createConnection(),entityManager);
     }
 
     @Override
     public MasterRequestDAO getMasterRequestDao() throws SQLException, IOException, NamingException {
-        return new MySQLMasterRequest(createConnection());
+        return new MySQLMasterRequest(createConnection(),entityManager);
     }
 
     @Override
     public RequestReviewDAO getReviewDao() throws SQLException, IOException, NamingException {
-        return new MySQLRequestReview(connection);
+        return new MySQLRequestReview(createConnection(),entityManager);
     }
 }

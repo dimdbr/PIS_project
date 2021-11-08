@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public interface StatusDAO {
     ArrayList<Status> findAll() throws SQLException;
 
-    void findStatusById(int id) throws SQLException;
+    Status findStatusById(int id) throws SQLException;
 
     void closeConnection() throws SQLException;
 }
